@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import DateTime, ForeignKey, Integer, Text, UniqueConstraint, Uuid, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -24,6 +25,9 @@ class DocumentChunk(Base):
     )
     content: Mapped[str] = mapped_column(
         Text, nullable=False
+    )
+    embedding: Mapped[Optional[list[float]]] = mapped_column(
+        Vector(768), nullable=True
     )
     page_number: Mapped[Optional[int]] = mapped_column(
         Integer, nullable=True

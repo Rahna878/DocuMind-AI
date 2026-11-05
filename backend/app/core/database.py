@@ -21,3 +21,13 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Create a Base class for database models to inherit from
 Base = declarative_base()
+
+
+def get_db():
+    """FastAPI dependency for yielding database sessions safely."""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+

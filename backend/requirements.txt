@@ -4,3 +4,8 @@ sqlalchemy
 psycopg[binary]
 python-dotenv
 httpx
+pgvector
+pypdf
+python-multipart
+pytest
+pytest-asyncio

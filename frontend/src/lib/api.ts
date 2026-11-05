@@ -40,24 +40,38 @@ export interface Document {
   filename: string;
   file_type: string;
   status: string;
-  page_count: number | null;
   created_at: string;
+  page_count?: number | null;
+  chunks_count?: number | null;
 }
 
-// TODO: Wire up when backend document endpoints exist
 export async function fetchDocuments(): Promise<Document[]> {
-  // return apiFetch<Document[]>("/documents");
-  throw new Error("NOT_IMPLEMENTED: GET /documents endpoint not available yet");
+  return apiFetch<Document[]>("/documents");
 }
 
-export async function uploadDocument(_file: File): Promise<Document> {
-  // const form = new FormData();
-  // form.append("file", file);
-  // const url = `${API_BASE_URL}/documents/upload`;
-  // const res = await fetch(url, { method: "POST", body: form });
-  // if (!res.ok) throw new Error(await res.text());
-  // return res.json();
-  throw new Error("NOT_IMPLEMENTED: POST /documents/upload endpoint not available yet");
+export async function uploadDocument(file: File): Promise<Document> {
+  const form = new FormData();
+  form.append("file", file);
+
+  const url = `${API_BASE_URL}/documents/upload`;
+  const response = await fetch(url, {
+    method: "POST",
+    body: form,
+  });
+
+  if (!response.ok) {
+    let errorMsg = `Upload failed with status ${response.status}`;
+    try {
+      const data = await response.json();
+      if (data.detail) errorMsg = data.detail;
+    } catch {
+      const text = await response.text();
+      if (text) errorMsg = text;
+    }
+    throw new Error(errorMsg);
+  }
+
+  return response.json() as Promise<Document>;
 }
 
 // ─── Chat types ──────────────────────────────────────────

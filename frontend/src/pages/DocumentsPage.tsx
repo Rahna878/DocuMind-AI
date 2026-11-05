@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   FileText,
   Upload,
@@ -35,9 +35,9 @@ export default function DocumentsPage() {
   }, []);
 
   // Load once on mount
-  useState(() => {
+  useEffect(() => {
     loadDocuments();
-  });
+  }, [loadDocuments]);
 
   // ── File selection ──
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
